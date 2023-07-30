@@ -12,6 +12,7 @@ import {
   Icon,
   useColorModeValue,
   Button,
+  Tooltip,
 } from '@chakra-ui/react'
 import { BsPencil } from 'react-icons/bs'
 import { BiEraser } from 'react-icons/bi'
@@ -49,6 +50,8 @@ export default function SplitWithImage() {
 
   const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState(null);
+
+  const [backendState, setBackendState] = useState(false);
   const write = (i) => {
     setPen(true);
   }
@@ -76,6 +79,11 @@ export default function SplitWithImage() {
   }
   useEffect(() => {
     table.current = initialState(ROW, COL);
+    const timer = setTimeout(async () =>{
+      const health = await fetch("/api/health");
+      setBackendState(health.state);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
   return (
     <Container maxW={'5xl'} py={12}>
@@ -188,8 +196,11 @@ export default function SplitWithImage() {
             size="lg"
             fontSize="md"
             fontWeight="bold"
+            isDisabled={!backendState}
           >
-              Predict
+              <Tooltip label={backendState ? "" : "the service is unavailible"} placement="top">
+                Predict
+              </Tooltip>
           </Button>
           <Text ml={4} fontSize="5xl" fontWeight="bold">
             {loading ? "..." : prediction === null ? "" : prediction}
@@ -207,10 +218,11 @@ export default function SplitWithImage() {
             size="lg"
             fontSize="md"
             fontWeight="bold"
-            disabled={true}
             isDisabled={true}
           >
-            Contrubute
+            <Tooltip label="Not available yet" placement="top">
+              Contrubute
+            </Tooltip>
           </Button>
         </Flex>
         
