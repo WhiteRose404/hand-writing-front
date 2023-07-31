@@ -51,7 +51,7 @@ export default function SplitWithImage() {
   const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState(null);
 
-  const [backendState, setBackendState] = useState(false);
+  const [backendState, setBackendState] = useState(true);
   const write = (i) => {
     setPen(true);
   }
@@ -79,11 +79,12 @@ export default function SplitWithImage() {
   }
   useEffect(() => {
     table.current = initialState(ROW, COL);
-    const timer = setTimeout(async () =>{
-      const health = await fetch("/api/health");
-      setBackendState(health.state);
-    }, 1000);
-    return () => clearTimeout(timer);
+    // const timer = setTimeout(async () =>{
+    //   const health = await fetch("/api/health");
+    //   console.log("health: ", health);
+    //   setBackendState(health.state);
+    // }, 1000);
+    // return () => clearTimeout(timer);
   }, []);
   return (
     <Container maxW={'5xl'} py={12}>
